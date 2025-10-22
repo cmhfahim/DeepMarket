@@ -134,50 +134,57 @@ elif page == "📊 Visualization":
     st.markdown("<br>", unsafe_allow_html=True)
 
     selected_company = st.selectbox("Select a company", sorted(df_vis["TRADING CODE"].unique()))
-    company_df = df_vis[df_vis["TRADING CODE"] == selected_company]
+    company_df = df_vis[df_vis["TRADING CODE"] == selected_company].copy()
 
     st.subheader("📄 Raw Data")
     st.dataframe(company_df, use_container_width=True)
 
     st.markdown("---")
 
-    # Close Price Trend
+    # 1. Close Price Trend
     st.subheader("📈 Close Price Over Time")
     fig1 = px.area(company_df, x="DATE", y="CLOSEP*", title=f"{selected_company} – Close Price Trend", color_discrete_sequence=["#4B8BBE"])
     st.plotly_chart(fig1, use_container_width=True)
 
-    # Rolling Mean & Median
-    st.subheader("🔄 30-Day Rolling Mean & Median of Close Price")
-    company_df['MA30'] = company_df['CLOSEP*'].rolling(30).mean()
-    company_df['MED30'] = company_df['CLOSEP*'].rolling(30).median()
+    # 2. Rolling Avg & Median
+    st.subheader("🔄 30-Day Rolling Avg & Median")
+    company_df['MA30'] = company_df['CLOSEP*'].rolling(30, min_periods=1).mean()
+    company_df['MED30'] = company_df['CLOSEP*'].rolling(30, min_periods=1).median()
     fig_rolling = px.line(
         company_df,
         x="DATE",
         y=["CLOSEP*", "MA30", "MED30"],
         labels={"value":"Price", "variable":"Legend"},
-        title=f"{selected_company} – Close Price with 30-Day MA & Median"
+        title=f"{selected_company} – Close Price with 30-Day MA & Median",
+        color_discrete_map={"CLOSEP*":"#4B8BBE", "MA30":"orange", "MED30":"green"}
     )
     st.plotly_chart(fig_rolling, use_container_width=True)
 
-    # Volume
+    # 3. Volume by Date
     st.subheader("📦 Volume by Date")
     fig2 = px.bar(company_df, x="DATE", y="VOLUME", title=f"{selected_company} – Trading Volume", color_discrete_sequence=["#ff7f0e"])
     st.plotly_chart(fig2, use_container_width=True)
 
-    # Daily % Change Histogram
+    # 4. Daily % Change Histogram
     st.subheader("📊 Daily % Change Histogram")
     company_df['PCT_CHANGE'] = company_df['CLOSEP*'].pct_change() * 100
-    fig_hist = px.histogram(company_df, x='PCT_CHANGE', nbins=30, title=f"{selected_company} – Daily % Change", color_discrete_sequence=["#17becf"])
+    fig_hist = px.histogram(
+        company_df,
+        x='PCT_CHANGE',
+        nbins=30,
+        title=f"{selected_company} – Daily % Change",
+        color_discrete_sequence=["#17becf"]
+    )
     st.plotly_chart(fig_hist, use_container_width=True)
 
-    # Target Pie
+    # 5. Target Pie
     st.subheader("🥧 Target Distribution")
     pie_data = company_df["TARGET"].value_counts().reindex([1, 0, -1], fill_value=0)
     pie_labels = ["1 = Up", "0 = No Change", "-1 = Down"]
     fig3 = px.pie(values=pie_data.values, names=pie_labels, color_discrete_sequence=["#2ecc71", "#f1c40f", "#e74c3c"])
     st.plotly_chart(fig3, use_container_width=True)
 
-    # Monthly Target Histogram
+    # 6. Monthly Target Histogram
     st.subheader("📅 Monthly Target Histogram")
     fig4 = px.histogram(
         company_df,
@@ -192,21 +199,82 @@ elif page == "📊 Visualization":
     fig4.update_layout(bargap=0.15, bargroupgap=0.05)
     st.plotly_chart(fig4, use_container_width=True)
 
-    # Correlation Heatmap
+    # 7. Monthly Avg Close Line Plot (from PDF function)
+    st.subheader("📈 Monthly Average Close Price")
+    monthly_avg = company_df.groupby('YEAR_MONTH')['CLOSEP*'].mean()
+    fig_monthly = px.line(
+        x=monthly_avg.index,
+        y=monthly_avg.values,
+        title=f"{selected_company} – Monthly Avg Close",
+        labels={'x':'Year-Month', 'y':'Avg Close'},
+        markers=True,
+        color_discrete_sequence=['purple']
+    )
+    st.plotly_chart(fig_monthly, use_container_width=True)
+
+    # 8. Volume vs Close Scatter
+    st.subheader("🔀 Volume vs Close Price Scatter")
+    fig_scatter = px.scatter(
+        company_df,
+        x='VOLUME',
+        y='CLOSEP*',
+        color='TARGET',
+        color_discrete_map={1:'#2ecc71', 0:'#f1c40f', -1:'#e74c3c'},
+        title=f"{selected_company} – Volume vs Close Price",
+        opacity=0.7
+    )
+    st.plotly_chart(fig_scatter, use_container_width=True)
+
+    # 9. Correlation Heatmap
     st.subheader("📊 Correlation Heatmap")
     num_cols = ['OPENP*', 'HIGH', 'LOW', 'CLOSEP*', 'TRADE', 'VOLUME']
-    corr = company_df[num_cols].corr()
-    fig_corr = px.imshow(corr, text_auto=True, color_continuous_scale='RdBu_r', title=f"{selected_company} – Correlation Heatmap")
+    fig_corr = px.imshow(
+        company_df[num_cols].corr(),
+        text_auto=True,
+        color_continuous_scale='RdBu_r',
+        title=f"{selected_company} – Correlation Heatmap"
+    )
     st.plotly_chart(fig_corr, use_container_width=True)
 
-    # Lag Plot
+    # 10. Lag Plot
     st.subheader("🔁 Lag Plot of Close Price")
-    import matplotlib.pyplot as plt
-    from pandas.plotting import lag_plot
-    fig_lag, ax = plt.subplots()
-    lag_plot(company_df['CLOSEP*'], ax=ax)
-    ax.set_title(f"{selected_company} – Lag Plot")
-    st.pyplot(fig_lag)
+    company_df['CLOSE_LAG1'] = company_df['CLOSEP*'].shift(1)
+    lag_df = company_df.dropna(subset=['CLOSE_LAG1', 'CLOSEP*'])
+    fig_lag = px.scatter(
+        lag_df,
+        x='CLOSE_LAG1',
+        y='CLOSEP*',
+        title=f"{selected_company} – Lag Plot (t vs t-1)",
+        labels={'CLOSE_LAG1':'Previous Day Close', 'CLOSEP*':'Today Close'},
+        color_discrete_sequence=['#9467bd']
+    )
+    st.plotly_chart(fig_lag, use_container_width=True)
+
+    # 11. Rolling Volatility (from PDF function)
+    st.subheader("📉 30-Day Rolling Volatility")
+    company_df['RET'] = company_df['CLOSEP*'].pct_change()
+    company_df['VOLATILITY'] = company_df['RET'].rolling(30, min_periods=1).std()
+    fig_vol = px.line(
+        company_df,
+        x='DATE',
+        y='VOLATILITY',
+        title=f"{selected_company} – 30-Day Rolling Volatility",
+        color_discrete_sequence=['crimson']
+    )
+    st.plotly_chart(fig_vol, use_container_width=True)
+
+    # 12. Circular Monthly Avg Close (Polar Plot)
+    st.subheader("🌀 Circular Monthly Avg Close Price")
+    monthly_data = company_df.groupby('MONTH')['CLOSEP*'].mean().reindex(range(1,13), fill_value=np.nan)
+    theta = np.linspace(0.0, 2 * np.pi, 12, endpoint=False)
+    fig_polar = px.bar_polar(
+        r=monthly_data.values,
+        theta=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        color=monthly_data.values,
+        color_continuous_scale=px.colors.sequential.Viridis,
+        title=f"{selected_company} – Circular Monthly Avg Close"
+    )
+    st.plotly_chart(fig_polar, use_container_width=True)
 
 elif page == "📌 Prediction":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>🔮 Prediction</h2>", unsafe_allow_html=True)
@@ -420,4 +488,5 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
