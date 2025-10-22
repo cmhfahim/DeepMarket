@@ -138,15 +138,13 @@ elif page == "📊 Visualization":
 
     st.subheader("📄 Raw Data")
     st.dataframe(company_df, use_container_width=True)
-
     st.markdown("---")
 
-    # 1. Close Price Trend
+    # ---- Trend & Rolling ----
     st.subheader("📈 Close Price Over Time")
     fig1 = px.area(company_df, x="DATE", y="CLOSEP*", title=f"{selected_company} – Close Price Trend", color_discrete_sequence=["#4B8BBE"])
     st.plotly_chart(fig1, use_container_width=True)
 
-    # 2. Rolling Avg & Median
     st.subheader("🔄 30-Day Rolling Avg & Median")
     company_df['MA30'] = company_df['CLOSEP*'].rolling(30, min_periods=1).mean()
     company_df['MED30'] = company_df['CLOSEP*'].rolling(30, min_periods=1).median()
@@ -160,12 +158,11 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_rolling, use_container_width=True)
 
-    # 3. Volume by Date
     st.subheader("📦 Volume by Date")
     fig2 = px.bar(company_df, x="DATE", y="VOLUME", title=f"{selected_company} – Trading Volume", color_discrete_sequence=["#ff7f0e"])
     st.plotly_chart(fig2, use_container_width=True)
 
-    # 4. Daily % Change Histogram
+    # ---- Returns & Distribution ----
     st.subheader("📊 Daily % Change Histogram")
     company_df['PCT_CHANGE'] = company_df['CLOSEP*'].pct_change() * 100
     fig_hist = px.histogram(
@@ -175,16 +172,53 @@ elif page == "📊 Visualization":
         title=f"{selected_company} – Daily % Change",
         color_discrete_sequence=["#17becf"]
     )
+    fig_hist.update_xaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    fig_hist.update_yaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    fig_hist.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig_hist, use_container_width=True)
 
-    # 5. Target Pie
-    st.subheader("🥧 Target Distribution")
-    pie_data = company_df["TARGET"].value_counts().reindex([1, 0, -1], fill_value=0)
-    pie_labels = ["1 = Up", "0 = No Change", "-1 = Down"]
-    fig3 = px.pie(values=pie_data.values, names=pie_labels, color_discrete_sequence=["#2ecc71", "#f1c40f", "#e74c3c"])
-    st.plotly_chart(fig3, use_container_width=True)
+    st.subheader("📦 Close Price Distribution (Box Plot)")
+    fig_box = px.box(
+        company_df,
+        x='CLOSEP*',
+        points="all",
+        color_discrete_sequence=['#1f77b4'],
+        title=f"{selected_company} – Close Price Distribution"
+    )
+    fig_box.update_xaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    fig_box.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+    st.plotly_chart(fig_box, use_container_width=True)
 
-    # 6. Monthly Target Histogram
+    # ---- Monthly Analysis ----
+    st.subheader("📈 Monthly Average Close Price")
+    monthly_avg = company_df.groupby('YEAR_MONTH')['CLOSEP*'].mean()
+    fig_monthly = px.line(
+        x=monthly_avg.index,
+        y=monthly_avg.values,
+        title=f"{selected_company} – Monthly Avg Close",
+        labels={'x':'Year-Month', 'y':'Avg Close'},
+        markers=True,
+        color_discrete_sequence=['purple']
+    )
+    st.plotly_chart(fig_monthly, use_container_width=True)
+
+    st.subheader("🌀 Circular Monthly Avg Close Price")
+    company_df['MONTH'] = company_df['MONTH'].astype(int)
+    monthly_data = company_df.groupby('MONTH')['CLOSEP*'].mean().reindex(range(1, 13), fill_value=0)
+    fig_polar = px.bar_polar(
+        r=monthly_data.values,
+        theta=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        color=monthly_data.values,
+        color_continuous_scale=px.colors.sequential.Viridis,
+        title=f"{selected_company} – Circular Monthly Avg Close"
+    )
+    fig_polar.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        polar=dict(bgcolor='rgba(0,0,0,0)')
+    )
+    st.plotly_chart(fig_polar, use_container_width=True)
+
     st.subheader("📅 Monthly Target Histogram")
     fig4 = px.histogram(
         company_df,
@@ -199,20 +233,13 @@ elif page == "📊 Visualization":
     fig4.update_layout(bargap=0.15, bargroupgap=0.05)
     st.plotly_chart(fig4, use_container_width=True)
 
-    # 7. Monthly Avg Close Line Plot (from PDF function)
-    st.subheader("📈 Monthly Average Close Price")
-    monthly_avg = company_df.groupby('YEAR_MONTH')['CLOSEP*'].mean()
-    fig_monthly = px.line(
-        x=monthly_avg.index,
-        y=monthly_avg.values,
-        title=f"{selected_company} – Monthly Avg Close",
-        labels={'x':'Year-Month', 'y':'Avg Close'},
-        markers=True,
-        color_discrete_sequence=['purple']
-    )
-    st.plotly_chart(fig_monthly, use_container_width=True)
+    st.subheader("🥧 Target Distribution")
+    pie_data = company_df["TARGET"].value_counts().reindex([1, 0, -1], fill_value=0)
+    pie_labels = ["1 = Up", "0 = No Change", "-1 = Down"]
+    fig3 = px.pie(values=pie_data.values, names=pie_labels, color_discrete_sequence=["#2ecc71", "#f1c40f", "#e74c3c"])
+    st.plotly_chart(fig3, use_container_width=True)
 
-    # 8. Volume vs Close Scatter
+    # ---- Relationships & Correlations ----
     st.subheader("🔀 Volume vs Close Price Scatter")
     fig_scatter = px.scatter(
         company_df,
@@ -225,7 +252,6 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_scatter, use_container_width=True)
 
-    # 9. Correlation Heatmap
     st.subheader("📊 Correlation Heatmap")
     num_cols = ['OPENP*', 'HIGH', 'LOW', 'CLOSEP*', 'TRADE', 'VOLUME']
     fig_corr = px.imshow(
@@ -236,7 +262,6 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_corr, use_container_width=True)
 
-    # 10. Lag Plot
     st.subheader("🔁 Lag Plot of Close Price")
     company_df['CLOSE_LAG1'] = company_df['CLOSEP*'].shift(1)
     lag_df = company_df.dropna(subset=['CLOSE_LAG1', 'CLOSEP*'])
@@ -250,7 +275,6 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_lag, use_container_width=True)
 
-    # 11. Rolling Volatility (from PDF function)
     st.subheader("📉 30-Day Rolling Volatility")
     company_df['RET'] = company_df['CLOSEP*'].pct_change()
     company_df['VOLATILITY'] = company_df['RET'].rolling(30, min_periods=1).std()
@@ -262,52 +286,6 @@ elif page == "📊 Visualization":
         color_discrete_sequence=['crimson']
     )
     st.plotly_chart(fig_vol, use_container_width=True)
-
-    # 12. Circular Monthly Avg Close (Polar Plot)st.subheader("🌀 Circular Monthly Avg Close Price")
-    # Ensure MONTH is integer type
-    company_df['MONTH'] = company_df['MONTH'].astype(int)
-    monthly_data = company_df.groupby('MONTH')['CLOSEP*'].mean()
-    
-    # Reindex safely: missing months get 0 or minimal value to avoid NaN
-    monthly_data = monthly_data.reindex(range(1, 13), fill_value=0)
-    
-    fig_polar = px.bar_polar(
-        r=monthly_data.values,
-        theta=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-        color=monthly_data.values,
-        color_continuous_scale=px.colors.sequential.Viridis,
-        title=f"{selected_company} – Circular Monthly Avg Close"
-    )
-    
-    # Remove all white backgrounds and make plot transparent
-    fig_polar.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',   # Background outside the plotting area
-        plot_bgcolor='rgba(0,0,0,0)',    # Background of plotting area
-        polar=dict(
-            bgcolor='rgba(0,0,0,0)'      # Polar coordinate background
-        )
-    )
-    
-    st.plotly_chart(fig_polar, use_container_width=True)
-
-    # 13. Box Plot of Close Price Distribution (Horizontal)
-    st.subheader("📦 Close Price Distribution (Box Plot)")
-    fig_box = px.box(
-        company_df,
-        x='CLOSEP*',           # Horizontal orientation
-        points="all",          # show all individual points
-        color_discrete_sequence=['#1f77b4'],
-        title=f"{selected_company} – Close Price Distribution"
-    )
-    
-    # Optional: remove white background to match dark theme
-    fig_box.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
-    )
-    
-    st.plotly_chart(fig_box, use_container_width=True)
-
 
 elif page == "📌 Prediction":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>🔮 Prediction</h2>", unsafe_allow_html=True)
@@ -521,6 +499,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
