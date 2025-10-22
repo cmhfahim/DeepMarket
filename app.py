@@ -263,8 +263,7 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_vol, use_container_width=True)
 
-    # 12. Circular Monthly Avg Close (Polar Plot)
-    st.subheader("🌀 Circular Monthly Avg Close Price")
+    # 12. Circular Monthly Avg Close (Polar Plot)st.subheader("🌀 Circular Monthly Avg Close Price")
     # Ensure MONTH is integer type
     company_df['MONTH'] = company_df['MONTH'].astype(int)
     monthly_data = company_df.groupby('MONTH')['CLOSEP*'].mean()
@@ -280,17 +279,23 @@ elif page == "📊 Visualization":
         title=f"{selected_company} – Circular Monthly Avg Close"
     )
     
-    # Remove white background
+    # Remove all white backgrounds and make plot transparent
     fig_polar.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
+        paper_bgcolor='rgba(0,0,0,0)',   # Background outside the plotting area
+        plot_bgcolor='rgba(0,0,0,0)',    # Background of plotting area
+        polar=dict(
+            bgcolor='rgba(0,0,0,0)'      # Polar coordinate background
+        )
     )
+    
     st.plotly_chart(fig_polar, use_container_width=True)
+
+    
     # 13. Box Plot of Close Price Distribution
     st.subheader("📦 Close Price Distribution (Box Plot)")
     fig_box = px.box(
         company_df,
-        y='CLOSEP*',
+        x='CLOSEP*',
         points="all",  # show all individual points
         color_discrete_sequence=['#1f77b4'],
         title=f"{selected_company} – Close Price Distribution"
@@ -517,6 +522,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
