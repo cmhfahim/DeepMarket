@@ -265,8 +265,13 @@ elif page == "📊 Visualization":
 
     # 12. Circular Monthly Avg Close (Polar Plot)
     st.subheader("🌀 Circular Monthly Avg Close Price")
-    monthly_data = company_df.groupby('MONTH')['CLOSEP*'].mean().reindex(range(1,13), fill_value=np.nan)
-    theta = np.linspace(0.0, 2 * np.pi, 12, endpoint=False)
+    # Ensure MONTH is integer type
+    company_df['MONTH'] = company_df['MONTH'].astype(int)
+    monthly_data = company_df.groupby('MONTH')['CLOSEP*'].mean()
+    
+    # Reindex safely: missing months get 0 or minimal value to avoid NaN
+    monthly_data = monthly_data.reindex(range(1, 13), fill_value=0)
+    
     fig_polar = px.bar_polar(
         r=monthly_data.values,
         theta=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
@@ -488,5 +493,6 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
