@@ -279,7 +279,31 @@ elif page == "📊 Visualization":
         color_continuous_scale=px.colors.sequential.Viridis,
         title=f"{selected_company} – Circular Monthly Avg Close"
     )
+    
+    # Remove white background
+    fig_polar.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
     st.plotly_chart(fig_polar, use_container_width=True)
+    # 13. Box Plot of Close Price Distribution
+    st.subheader("📦 Close Price Distribution (Box Plot)")
+    fig_box = px.box(
+        company_df,
+        y='CLOSEP*',
+        points="all",  # show all individual points
+        color_discrete_sequence=['#1f77b4'],
+        title=f"{selected_company} – Close Price Distribution"
+    )
+    
+    # Optional: remove white background to match dark theme
+    fig_box.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
+    
+    st.plotly_chart(fig_box, use_container_width=True)
+
 
 elif page == "📌 Prediction":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>🔮 Prediction</h2>", unsafe_allow_html=True)
@@ -493,6 +517,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
