@@ -295,19 +295,46 @@ elif page == "📊 Visualization":
     st.subheader("📦 Close Price Distribution (Box Plot)")
     fig_box = px.box(
         company_df,
-        x='CLOSEP*',
-        points="all",  # show all individual points
+        x='CLOSEP*',           # Horizontal orientation
+        points="all",          # show all individual points
         color_discrete_sequence=['#1f77b4'],
         title=f"{selected_company} – Close Price Distribution"
     )
     
-    # Optional: remove white background to match dark theme
+    # Add grid lines for readability
+    fig_box.update_xaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    fig_box.update_yaxes(showgrid=False)  # y-axis has no grid for horizontal box
+    
+    # Remove white background
     fig_box.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)'
     )
     
     st.plotly_chart(fig_box, use_container_width=True)
+
+    st.subheader("📊 Daily % Change Histogram")
+    company_df['PCT_CHANGE'] = company_df['CLOSEP*'].pct_change() * 100
+    
+    fig_hist = px.histogram(
+        company_df,
+        x='PCT_CHANGE',
+        nbins=30,
+        title=f"{selected_company} – Daily % Change",
+        color_discrete_sequence=["#17becf"]
+    )
+    
+    # Add grid lines
+    fig_hist.update_xaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    fig_hist.update_yaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    
+    # Remove white background
+    fig_hist.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
+    
+    st.plotly_chart(fig_hist, use_container_width=True)
 
 
 elif page == "📌 Prediction":
@@ -522,6 +549,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
