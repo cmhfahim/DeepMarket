@@ -132,7 +132,6 @@ if page == "🏠 Home":
 elif page == "📊 Visualization":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📊 Data Visualization</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    #st.markdown("## 📊 Data Visualization")
 
     selected_company = st.selectbox("Select a company", sorted(df_vis["TRADING CODE"].unique()))
     company_df = df_vis[df_vis["TRADING CODE"] == selected_company]
@@ -142,20 +141,43 @@ elif page == "📊 Visualization":
 
     st.markdown("---")
 
+    # Close Price Trend
     st.subheader("📈 Close Price Over Time")
     fig1 = px.area(company_df, x="DATE", y="CLOSEP*", title=f"{selected_company} – Close Price Trend", color_discrete_sequence=["#4B8BBE"])
     st.plotly_chart(fig1, use_container_width=True)
 
+    # Rolling Mean & Median
+    st.subheader("🔄 30-Day Rolling Mean & Median of Close Price")
+    company_df['MA30'] = company_df['CLOSEP*'].rolling(30).mean()
+    company_df['MED30'] = company_df['CLOSEP*'].rolling(30).median()
+    fig_rolling = px.line(
+        company_df,
+        x="DATE",
+        y=["CLOSEP*", "MA30", "MED30"],
+        labels={"value":"Price", "variable":"Legend"},
+        title=f"{selected_company} – Close Price with 30-Day MA & Median"
+    )
+    st.plotly_chart(fig_rolling, use_container_width=True)
+
+    # Volume
     st.subheader("📦 Volume by Date")
     fig2 = px.bar(company_df, x="DATE", y="VOLUME", title=f"{selected_company} – Trading Volume", color_discrete_sequence=["#ff7f0e"])
     st.plotly_chart(fig2, use_container_width=True)
 
+    # Daily % Change Histogram
+    st.subheader("📊 Daily % Change Histogram")
+    company_df['PCT_CHANGE'] = company_df['CLOSEP*'].pct_change() * 100
+    fig_hist = px.histogram(company_df, x='PCT_CHANGE', nbins=30, title=f"{selected_company} – Daily % Change", color_discrete_sequence=["#17becf"])
+    st.plotly_chart(fig_hist, use_container_width=True)
+
+    # Target Pie
     st.subheader("🥧 Target Distribution")
     pie_data = company_df["TARGET"].value_counts().reindex([1, 0, -1], fill_value=0)
     pie_labels = ["1 = Up", "0 = No Change", "-1 = Down"]
     fig3 = px.pie(values=pie_data.values, names=pie_labels, color_discrete_sequence=["#2ecc71", "#f1c40f", "#e74c3c"])
     st.plotly_chart(fig3, use_container_width=True)
 
+    # Monthly Target Histogram
     st.subheader("📅 Monthly Target Histogram")
     fig4 = px.histogram(
         company_df,
@@ -167,13 +189,24 @@ elif page == "📊 Visualization":
         width=900,
         height=400
     )
-
-    fig4.update_layout(
-        bargap=0.15,       # space between bars of different months
-        bargroupgap=0.05   # space between bars of same month but different target classes
-    )
-
+    fig4.update_layout(bargap=0.15, bargroupgap=0.05)
     st.plotly_chart(fig4, use_container_width=True)
+
+    # Correlation Heatmap
+    st.subheader("📊 Correlation Heatmap")
+    num_cols = ['OPENP*', 'HIGH', 'LOW', 'CLOSEP*', 'TRADE', 'VOLUME']
+    corr = company_df[num_cols].corr()
+    fig_corr = px.imshow(corr, text_auto=True, color_continuous_scale='RdBu_r', title=f"{selected_company} – Correlation Heatmap")
+    st.plotly_chart(fig_corr, use_container_width=True)
+
+    # Lag Plot
+    st.subheader("🔁 Lag Plot of Close Price")
+    import matplotlib.pyplot as plt
+    from pandas.plotting import lag_plot
+    fig_lag, ax = plt.subplots()
+    lag_plot(company_df['CLOSEP*'], ax=ax)
+    ax.set_title(f"{selected_company} – Lag Plot")
+    st.pyplot(fig_lag)
 
 elif page == "📌 Prediction":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>🔮 Prediction</h2>", unsafe_allow_html=True)
@@ -387,3 +420,4 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
