@@ -325,8 +325,8 @@ elif page == "📊 Visualization":
     )
     
     # Add grid lines
-    fig_hist.update_xaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
-    fig_hist.update_yaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    #fig_hist.update_xaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    #fig_hist.update_yaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
     
     # Remove white background
     fig_hist.update_layout(
