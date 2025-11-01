@@ -380,7 +380,7 @@ elif page == "📌 Prediction":
     # Center the Predict button
     btn_col1, btn_col2, btn_col3 = st.columns([3, 1, 3])
     with btn_col2:
-        predict_clicked = st.button("📊 Predict")
+        predict_clicked = st.button("Predict")
 
     if predict_clicked:
         input_df = pd.DataFrame([{
@@ -395,13 +395,13 @@ elif page == "📌 Prediction":
         }])
 
         prediction = model.predict(input_df)[0]
-        label_map = {1: "📈 Price Up", 0: "➖ No Change", -1: "📉 Price Down"}
+        label_map = {1: "Price Up", 0: "No Change", -1: "Price Down"}
 
         # Larger font size for result, centered, green color
         st.markdown(f"""
             <div style='text-align:center; margin-top: 20px;'>
                 <h2 style='color:green; font-size: 36px;'>{label_map[prediction]}</h2>
-                <p style='font-weight:bold; font-size:28px;'>📊 Model ({model_choice}) predicts: <strong>{label_map[prediction]}</strong> for {company_name}</p>
+                <p style='font-weight:bold; font-size:28px;'>Model ({model_choice}) predicts: <strong>{label_map[prediction]}</strong> for {company_name}</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -445,6 +445,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
