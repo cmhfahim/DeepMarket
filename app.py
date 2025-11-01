@@ -317,6 +317,29 @@ elif page == "📌 Prediction":
     company_name = st.selectbox("Select company", sorted(enc_dict.keys()))
     company_id = enc_dict[company_name]
 
+    # 🔹 Model selection
+    model_choice = st.selectbox(
+        "Select Model",
+        ["LightGBM", "XGBoost", "Random Forest"],
+        key="model_choice"
+    )
+
+    # Load model dynamically
+    model_files = {
+        "LightGBM": "lgbm_model.pkl",
+        "XGBoost": "xgboost_model.pkl",
+        "Random Forest": "rf_model.pkl"
+    }
+
+    model_path = model_files[model_choice]
+
+    try:
+        with open(model_path, "rb") as f:
+            model = pickle.load(f)
+    except Exception as e:
+        st.error(f"❌ Failed to load {model_choice} model: {e}")
+        st.stop()
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -340,7 +363,7 @@ elif page == "📌 Prediction":
         volume = st.number_input("VOLUME", min_value=0, value=10000, key="volume")
 
     # Center the Predict button
-    btn_col1, btn_col2, btn_col3 = st.columns([3,1,3])
+    btn_col1, btn_col2, btn_col3 = st.columns([3, 1, 3])
     with btn_col2:
         predict_clicked = st.button("📊 Predict")
 
@@ -363,7 +386,7 @@ elif page == "📌 Prediction":
         st.markdown(f"""
             <div style='text-align:center; margin-top: 20px;'>
                 <h2 style='color:green; font-size: 36px;'>{label_map[prediction]}</h2>
-                <p style='font-weight:bold; font-size:28px;'>📊 Model predicts: <strong>{label_map[prediction]}</strong> for {company_name}</p>
+                <p style='font-weight:bold; font-size:28px;'>📊 Model ({model_choice}) predicts: <strong>{label_map[prediction]}</strong> for {company_name}</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -407,6 +430,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
