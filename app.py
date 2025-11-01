@@ -131,7 +131,7 @@ if page == "🏠 Home":
 
 
 elif page == "📊 Visualization":
-    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📊 Data Visualization</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>Data Visualization</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
     selected_company = st.selectbox("Select a company", sorted(df_vis["TRADING CODE"].unique()))
@@ -445,6 +445,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
