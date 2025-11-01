@@ -132,33 +132,7 @@ if page == "🏠 Home":
 elif page == "📈 Market Analysis":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📈 Market Analysis</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-
-    # ---- Market Average Close Price Trend ----
-    st.subheader("Market Average Close Price Over Time")
-    market_daily = df_vis2.groupby('DATE')['CLOSEP*'].mean().reset_index()
-    fig_market_trend = px.area(
-        market_daily,
-        x='DATE',
-        y='CLOSEP*',
-        title="Average Close Price Trend Across All Companies",
-        color_discrete_sequence=['#4B8BBE']
-    )
-    st.plotly_chart(fig_market_trend, use_container_width=True)
-
-    # ---- Rolling Average and Median ----
-    st.subheader("30-Day Rolling Avg & Median (Market Level)")
-    market_daily['MA30'] = market_daily['CLOSEP*'].rolling(30, min_periods=1).mean()
-    market_daily['MED30'] = market_daily['CLOSEP*'].rolling(30, min_periods=1).median()
-    fig_rolling = px.line(
-        market_daily,
-        x="DATE",
-        y=["CLOSEP*", "MA30", "MED30"],
-        labels={"value": "Price", "variable": "Legend"},
-        title="Market – Close Price with 30-Day MA & Median",
-        color_discrete_map={"CLOSEP*": "#4B8BBE", "MA30": "orange", "MED30": "green"}
-    )
-    st.plotly_chart(fig_rolling, use_container_width=True)
-
+    
     # ---- Monthly Average Trend (Donut Chart) ----
     st.subheader("Market Monthly Average Direction")
     df_vis2["MONTH"] = pd.to_datetime(df_vis2["DATE"]).dt.to_period("M")
@@ -585,6 +559,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
