@@ -251,11 +251,13 @@ elif page == "📈 Market Analysis":
     )
     fig_polar.update_layout(
         polar=dict(
-            radialaxis=dict(showticklabels=False, ticks=''),
-            angularaxis=dict(direction="clockwise")
+            bgcolor='rgba(0,0,0,0)',  # transparent polar background
+            radialaxis=dict(showticklabels=False, ticks='', gridcolor='rgba(0,0,0,0)'),
+            angularaxis=dict(direction="clockwise", gridcolor='rgba(0,0,0,0)')
         ),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
+        paper_bgcolor='rgba(0,0,0,0)',   # transparent paper
+        plot_bgcolor='rgba(0,0,0,0)',    # transparent plot
+        font_color="white"
     )
     st.plotly_chart(fig_polar, use_container_width=True)
 
@@ -583,6 +585,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
