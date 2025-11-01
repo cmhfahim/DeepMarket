@@ -58,7 +58,7 @@ model = joblib.load("lgbm_model.pkl")
 
 # Sidebar
 st.sidebar.title("📂 Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home", "📊 Visualization", "📌 Prediction", "📘 Real Life Experience","🚀 Project Journey", "📝 Feedback"])
+page = st.sidebar.radio("Go to", ["🏠 Home", "📊 Visualization", "📌 Prediction","📝 Feedback"])
 
 # ---- Pages ----
 
@@ -357,119 +357,6 @@ elif page == "📌 Prediction":
         </div>
     """, unsafe_allow_html=True)
 
-elif page == "🚀 Project Journey":
-    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>🛤️ Project Journey</h2>", unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    #st.markdown("## 🛤️ Project Journey")
-
-    def image_to_base64(img):
-        buffered = io.BytesIO()
-        img.save(buffered, format="PNG")
-        return base64.b64encode(buffered.getvalue()).decode()
-
-    image_dir = r"project_pic"
-    valid_exts = (".jpg", ".jpeg", ".png")
-
-    image_files = sorted(
-        [f for f in os.listdir(image_dir) if f.lower().endswith(valid_exts)],
-        key=lambda x: int(os.path.splitext(x)[0])
-    )
-
-    if not image_files:
-        st.warning("⚠️ No JPG/PNG images found in the folder.")
-    else:
-        if "img_index" not in st.session_state:
-            st.session_state.img_index = 0
-        if "full_size" not in st.session_state:
-            st.session_state.full_size = False
-
-        cols = st.columns(5)
-        with cols[1]:
-            if st.button("⬅️ Previous"):
-                st.session_state.img_index = max(0, st.session_state.img_index - 1)
-        with cols[2]:
-            toggle_label = "Exit Full Size" if st.session_state.full_size else "Full Size"
-            if st.button(toggle_label):
-                st.session_state.full_size = not st.session_state.full_size
-        with cols[3]:
-            if st.button("Next ➡️"):
-                st.session_state.img_index = min(len(image_files) - 1, st.session_state.img_index + 1)
-
-        img_path = os.path.join(image_dir, image_files[st.session_state.img_index])
-        img = Image.open(img_path)
-
-        max_size = (1200, 900) if st.session_state.full_size else (800, 600)
-        img.thumbnail(max_size)
-
-        st.markdown(
-            f'<div style="display:flex; justify-content:center;">'
-            f'<img src="data:image/png;base64,{image_to_base64(img)}" style="max-width:100%; height:auto;">'
-            f'</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(f"<p style='text-align:center; margin-top:10px;'>Step {st.session_state.img_index + 1} of {len(image_files)}</p>", unsafe_allow_html=True)
-
-elif page == "📘 Real Life Experience":
-    # White colored main heading
-    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📘 Real Life Experience</h2>", unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # Black text content
-    st.markdown("""
-        <div style='color:black; font-size:18px;'>
-            <h3>🎯 Model Performance</h3>
-            <ul>
-                <li><strong>Accuracy</strong>: <span style='color:white;'>0.8809</span></li>
-                <li><strong>F1 Score</strong>: <span style='color:white;'>0.8804</span></li>
-                <li><strong>Precision</strong>: <span style='color:white;'>0.8937</span></li>
-                <li><strong>Recall</strong>: <span style='color:white;'>0.8911</span></li>
-            </ul>
-        </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<hr style='border-top: 1px solid #ccc;'>", unsafe_allow_html=True)
-
-    st.markdown("<h3 style='color:black;'>📊 Classification Report</h3>", unsafe_allow_html=True)
-
-    html_table = """
-    <table style='width:100%; border-collapse: collapse; color:black; font-size:16px;'>
-      <thead>
-        <tr>
-          <th style='border: 1px solid #ddd; padding: 8px;'>Label</th>
-          <th style='border: 1px solid #ddd; padding: 8px;'>Precision</th>
-          <th style='border: 1px solid #ddd; padding: 8px;'>Recall</th>
-          <th style='border: 1px solid #ddd; padding: 8px;'>F1-Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td style='border: 1px solid #ddd; padding: 8px;'>-1 (Down)</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.86</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.89</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.87</td></tr>
-        <tr><td style='border: 1px solid #ddd; padding: 8px;'>0 (No Change)</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.95</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.92</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.92</td></tr>
-        <tr><td style='border: 1px solid #ddd; padding: 8px;'>1 (Up)</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.89</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.86</td><td style='border: 1px solid #ddd; padding: 8px; color:white;'>0.87</td></tr>
-      </tbody>
-    </table>
-    """
-    st.markdown(html_table, unsafe_allow_html=True)
-
-    st.markdown("<hr style='border-top: 1px solid #ccc;'>", unsafe_allow_html=True)
-    st.markdown("<h3 style='color:black;'>🔁 Confusion Matrix</h3>", unsafe_allow_html=True)
-
-    confusion_matrix = pd.DataFrame(
-        [[2267, 71, 213], [57, 3189, 227], [177, 248, 2192]],
-        columns=["Pred: -1", "Pred: 0", "Pred: 1"],
-        index=["Actual: -1", "Actual: 0", "Actual: 1"]
-    )
-
-    fig_cm = px.imshow(
-        confusion_matrix,
-        text_auto=True,
-        color_continuous_scale='Blues',
-        labels=dict(x="Predicted Label", y="Actual Label", color="Count"),
-        title="Confusion Matrix"
-    )
-    st.plotly_chart(fig_cm, use_container_width=True)
-
-
 
 elif page == "📝 Feedback":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📝 Feedback</h2>", unsafe_allow_html=True)
@@ -499,6 +386,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
