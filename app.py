@@ -429,7 +429,7 @@ elif page == "Visualization":
 
 
 elif page == "Prediction":
-    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>🔮 Prediction</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>Prediction</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
     st.markdown("<p style='text-align:center;'>Enter the feature values below:</p>", unsafe_allow_html=True)
@@ -529,7 +529,7 @@ elif page == "Prediction":
 
 
 elif page == "Feedback":
-    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📝 Feedback</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>Feedback</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
     st.markdown("""
@@ -556,6 +556,7 @@ elif page == "Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
