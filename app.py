@@ -133,44 +133,65 @@ elif page == "📈 Market Analysis":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📈 Market Analysis</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ---- General Market Overview ----
-    st.subheader("Overall Market Close Price Trend")
+    # ---- Market Average Close Price Trend ----
+    st.subheader("Market Average Close Price Over Time")
     market_daily = df_vis2.groupby('DATE')['CLOSEP*'].mean().reset_index()
-    fig_market_trend = px.line(
-        market_daily, 
-        x='DATE', 
-        y='CLOSEP*', 
+    fig_market_trend = px.area(
+        market_daily,
+        x='DATE',
+        y='CLOSEP*',
         title="Average Close Price Trend Across All Companies",
         color_discrete_sequence=['#4B8BBE']
     )
     st.plotly_chart(fig_market_trend, use_container_width=True)
 
-    st.subheader("Total Market Volume Over Time")
-    market_volume = df_vis2.groupby('DATE')['VOLUME'].sum().reset_index()
-    fig_market_vol = px.bar(
-        market_volume, 
-        x='DATE', 
-        y='VOLUME', 
-        title="Total Trading Volume Across All Companies",
-        color_discrete_sequence=['#ff7f0e']
+    # ---- Rolling Average and Median ----
+    st.subheader("30-Day Rolling Avg & Median (Market Level)")
+    market_daily['MA30'] = market_daily['CLOSEP*'].rolling(30, min_periods=1).mean()
+    market_daily['MED30'] = market_daily['CLOSEP*'].rolling(30, min_periods=1).median()
+    fig_rolling = px.line(
+        market_daily,
+        x="DATE",
+        y=["CLOSEP*", "MA30", "MED30"],
+        labels={"value": "Price", "variable": "Legend"},
+        title="Market – Close Price with 30-Day MA & Median",
+        color_discrete_map={"CLOSEP*": "#4B8BBE", "MA30": "orange", "MED30": "green"}
     )
-    st.plotly_chart(fig_market_vol, use_container_width=True)
+    st.plotly_chart(fig_rolling, use_container_width=True)
 
-    st.subheader("Daily Market % Change Distribution")
-    df_vis2['PCT_CHANGE'] = df_vis2.groupby('TRADING CODE')['CLOSEP*'].pct_change() * 100
-    fig_market_pct = px.histogram(
-        df_vis2, 
-        x='PCT_CHANGE', 
-        nbins=50, 
-        title="Daily % Change Distribution Across Market",
-        color_discrete_sequence=['#17becf']
+    # ---- Monthly Average Trend (Donut Chart) ----
+    st.subheader("Market Monthly Average Direction")
+    df_vis2["MONTH"] = pd.to_datetime(df_vis2["DATE"]).dt.to_period("M")
+    monthly_avg = df_vis2.groupby("MONTH")["TARGET"].mean().reset_index()
+
+    def categorize_trend(val):
+        if val > 0.05:
+            return "Up"
+        elif val < -0.05:
+            return "Down"
+        else:
+            return "No Change"
+
+    monthly_avg["Trend"] = monthly_avg["TARGET"].apply(categorize_trend)
+    trend_counts = monthly_avg["Trend"].value_counts().reset_index()
+    trend_counts.columns = ["Trend", "Count"]
+
+    fig_pie = px.pie(
+        trend_counts,
+        names="Trend",
+        values="Count",
+        hole=0.5,
+        title="Market Monthly Average Trend Distribution",
+        color_discrete_map={"Up": "green", "Down": "red", "No Change": "gray"}
     )
-    st.plotly_chart(fig_market_pct, use_container_width=True)
+    st.plotly_chart(fig_pie, use_container_width=True)
 
+    # ---- Market Target Distribution ----
     st.subheader("Market Target Distribution (Up/No Change/Down)")
     target_counts = df_vis2['TARGET'].value_counts().reindex([1, 0, -1], fill_value=0)
     target_labels = ["1 = Price Up", "0 = No Change", "-1 = Price Down"]
     target_color_map = {1: "#2ecc71", 0: "#f1c40f", -1: "#e74c3c"}
+
     fig_market_target = px.pie(
         values=target_counts.values,
         names=target_labels,
@@ -180,17 +201,17 @@ elif page == "📈 Market Analysis":
     )
     st.plotly_chart(fig_market_target, use_container_width=True)
 
-    st.subheader("Top 10 Companies by Average Close Price")
-    top10 = df_vis2.groupby('TRADING CODE')['CLOSEP*'].mean().sort_values(ascending=False).head(10).reset_index()
-    fig_top10 = px.bar(
-        top10, 
-        x='TRADING CODE', 
-        y='CLOSEP*', 
-        title="Top 10 Companies by Average Close Price",
-        color='CLOSEP*',
-        color_continuous_scale=px.colors.sequential.Viridis
+    # ---- Total Market Volume Over Time ----
+    st.subheader("Total Market Volume Over Time")
+    market_volume = df_vis2.groupby('DATE')['VOLUME'].sum().reset_index()
+    fig_market_vol = px.area(
+        market_volume,
+        x='DATE',
+        y='VOLUME',
+        title="Total Trading Volume Across All Companies",
+        color_discrete_sequence=['#6A5ACD']
     )
-    st.plotly_chart(fig_top10, use_container_width=True)
+    st.plotly_chart(fig_market_vol, use_container_width=True)
 
 
 
@@ -509,6 +530,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
