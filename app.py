@@ -133,7 +133,7 @@ elif page == "📈 Market Analysis":
     st.markdown("<br>", unsafe_allow_html=True)
     
     # ---- Monthly Average Trend (Donut Chart) ----
-    st.subheader("Market Monthly Average Direction")
+    """st.subheader("Market Monthly Average Direction")
     df_vis2["MONTH"] = pd.to_datetime(df_vis2["DATE"]).dt.to_period("M")
     monthly_avg = df_vis2.groupby("MONTH")["TARGET"].mean().reset_index()
 
@@ -157,7 +157,7 @@ elif page == "📈 Market Analysis":
         title="Market Monthly Average Trend Distribution",
         color_discrete_map={"Up": "green", "Down": "red", "No Change": "gray"}
     )
-    st.plotly_chart(fig_pie, use_container_width=True)
+    st.plotly_chart(fig_pie, use_container_width=True)"""
 
     # ---- Market Target Distribution ----st.subheader("Market Target Distribution (Up/No Change/Down)")
     st.subheader("Market Target Distribution (Up/No Change/Down)")
@@ -557,6 +557,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
