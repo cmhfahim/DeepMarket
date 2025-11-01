@@ -86,7 +86,7 @@ if page == "🏠 Home":
         <div style="text-align: center; max-width: 900px; margin: 0 auto; color:#241717; font-size: 18px; line-height: 1.6;">
             <h2>🌐 Description</h2>
             <p>
-                Explore trends, visualize insights, and predict future movement of stocks from Dhaka Stock Exchange using interactive tools. This platform leverages historical data to understand stock behavior and uses machine learning models (LightGBM) to forecast whether a company's stock is likely to go up, stay unchanged, or go down. With rich visualizations, stock-wise filtering, and an interactive prediction interface, users can gain deeper insights into the market's rhythm. Whether you're a curious learner, a data enthusiast, or a researcher, DeepMarket offers a compact yet powerful window into financial analytics. Built using <strong>Python, Streamlit, Plotly, LightGBM, Pandas,</strong> and <strong>Seaborn</strong>, this project aims to bridge the gap between data science and financial decision-making.
+                Explore trends, visualize insights, and predict future movement of stocks from Dhaka Stock Exchange using interactive tools. This platform leverages historical data to understand stock behavior and uses machine learning models (LightGBM,XGBoost,Neural Network) to forecast whether a company's stock is likely to go up, stay unchanged, or go down. With rich visualizations, stock-wise filtering, and an interactive prediction interface, users can gain deeper insights into the market's rhythm. Whether you're a curious learner, a data enthusiast, or a researcher, DeepMarket offers a compact yet powerful window into financial analytics. Built using <strong>Python, Streamlit, Plotly, LightGBM,XGBoost,Neural Network, Pandas,</strong> and <strong>Seaborn</strong>, this project aims to bridge the gap between data science and financial decision-making.
             </p>
         </div>
 
@@ -445,6 +445,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
