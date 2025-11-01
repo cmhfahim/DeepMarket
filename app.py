@@ -338,18 +338,24 @@ elif page == "📊 Visualization":
     # ---- Target Distribution (Pie Chart) ----
     st.subheader("Target Distribution")
     pie_data = company_df["TARGET"].value_counts().reindex([1, 0, -1], fill_value=0)
+    
     fig3 = px.pie(
         values=pie_data.values,
         names=target_labels,
         color=pie_data.index.astype(str),
         color_discrete_map={str(k): v for k, v in target_color_map.items()},
+        hole=0.5,  # makes it a donut chart
         title="Target Distribution"
     )
+    
     fig3.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
+        plot_bgcolor='rgba(0,0,0,0)',
+        showlegend=True
     )
+
     st.plotly_chart(fig3, use_container_width=True)
+
 
 
     # ---- Relationships & Correlations ----
@@ -530,6 +536,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
