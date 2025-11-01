@@ -10,7 +10,7 @@ import joblib
 import io
 import base64
 
-st.set_page_config(page_title="📈 DeepMarket", layout="wide")
+st.set_page_config(page_title="DeepMarket", layout="wide")
 
 # ---- Custom Sidebar Font Size -----
 st.markdown("""
@@ -137,18 +137,18 @@ elif page == "📊 Visualization":
     selected_company = st.selectbox("Select a company", sorted(df_vis["TRADING CODE"].unique()))
     company_df2 = df_vis[df_vis["TRADING CODE"] == selected_company].copy()
 
-    st.subheader("📄 Raw Data")
+    st.subheader("Raw Data")
     st.dataframe(company_df2, use_container_width=True)
     st.markdown("---")
 
     company_df = df_vis2[df_vis2["TRADING CODE"] == selected_company].copy()
 
     # ---- Trend & Rolling ----
-    st.subheader("📈 Close Price Over Time")
+    st.subheader("Close Price Over Time")
     fig1 = px.area(company_df, x="DATE", y="CLOSEP*", title=f"{selected_company} – Close Price Trend", color_discrete_sequence=["#4B8BBE"])
     st.plotly_chart(fig1, use_container_width=True)
 
-    st.subheader("🔄 30-Day Rolling Avg & Median")
+    st.subheader("30-Day Rolling Avg & Median")
     company_df['MA30'] = company_df['CLOSEP*'].rolling(30, min_periods=1).mean()
     company_df['MED30'] = company_df['CLOSEP*'].rolling(30, min_periods=1).median()
     fig_rolling = px.line(
@@ -161,12 +161,12 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_rolling, use_container_width=True)
 
-    st.subheader("📦 Volume by Date")
+    st.subheader("Volume by Date")
     fig2 = px.bar(company_df, x="DATE", y="VOLUME", title=f"{selected_company} – Trading Volume", color_discrete_sequence=["#ff7f0e"])
     st.plotly_chart(fig2, use_container_width=True)
 
     # ---- Returns & Distribution ----
-    st.subheader("📊 Daily % Change Histogram")
+    st.subheader("Daily % Change Histogram")
     company_df['PCT_CHANGE'] = company_df['CLOSEP*'].pct_change() * 100
     fig_hist = px.histogram(
         company_df,
@@ -180,7 +180,7 @@ elif page == "📊 Visualization":
     fig_hist.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig_hist, use_container_width=True)
 
-    st.subheader("📦 Close Price Distribution (Box Plot)")
+    st.subheader("Close Price Distribution (Box Plot)")
     fig_box = px.box(
         company_df,
         x='CLOSEP*',
@@ -193,7 +193,7 @@ elif page == "📊 Visualization":
     st.plotly_chart(fig_box, use_container_width=True)
 
     # ---- Monthly Analysis ----
-    st.subheader("📈 Monthly Average Close Price")
+    st.subheader("Monthly Average Close Price")
     monthly_avg = company_df.groupby('YEAR_MONTH')['CLOSEP*'].mean()
     fig_monthly = px.line(
         x=monthly_avg.index,
@@ -205,7 +205,7 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_monthly, use_container_width=True)
 
-    st.subheader("🌀 Circular Monthly Avg Close Price")
+    st.subheader("Circular Monthly Avg Close Price")
     company_df['MONTH'] = company_df['MONTH'].astype(int)
     monthly_data = company_df.groupby('MONTH')['CLOSEP*'].mean().reindex(range(1, 13), fill_value=0)
     fig_polar = px.bar_polar(
@@ -231,7 +231,7 @@ elif page == "📊 Visualization":
     target_labels = ["1 = Price Up", "0 = No Change", "-1 = Price Down"]
     
     # ---- Monthly Target Histogram ----
-    st.subheader("📅 Monthly Target Histogram")
+    st.subheader("Monthly Target Histogram")
     fig4 = px.histogram(
         company_df,
         x="MONTH",
@@ -251,7 +251,7 @@ elif page == "📊 Visualization":
     st.plotly_chart(fig4, use_container_width=True)
     
     # ---- Target Distribution (Pie Chart) ----
-    st.subheader("🥧 Target Distribution")
+    st.subheader("Target Distribution")
     pie_data = company_df["TARGET"].value_counts().reindex([1, 0, -1], fill_value=0)
     fig3 = px.pie(
         values=pie_data.values,
@@ -268,7 +268,7 @@ elif page == "📊 Visualization":
 
 
     # ---- Relationships & Correlations ----
-    st.subheader("🔀 Volume vs Close Price Scatter")
+    st.subheader("Volume vs Close Price Scatter")
     fig_scatter = px.scatter(
         company_df,
         x='VOLUME',
@@ -280,7 +280,7 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_scatter, use_container_width=True)
 
-    st.subheader("📊 Correlation Heatmap")
+    st.subheader("Correlation Heatmap")
     num_cols = ['OPENP*', 'HIGH', 'LOW', 'CLOSEP*', 'TRADE', 'VOLUME']
     fig_corr = px.imshow(
         company_df[num_cols].corr(),
@@ -290,7 +290,7 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_corr, use_container_width=True)
 
-    st.subheader("🔁 Lag Plot of Close Price")
+    st.subheader("Lag Plot of Close Price")
     company_df['CLOSE_LAG1'] = company_df['CLOSEP*'].shift(1)
     lag_df = company_df.dropna(subset=['CLOSE_LAG1', 'CLOSEP*'])
     fig_lag = px.scatter(
@@ -303,7 +303,7 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_lag, use_container_width=True)
 
-    st.subheader("📉 30-Day Rolling Volatility")
+    st.subheader("30-Day Rolling Volatility")
     company_df['RET'] = company_df['CLOSEP*'].pct_change()
     company_df['VOLATILITY'] = company_df['RET'].rolling(30, min_periods=1).std()
     fig_vol = px.line(
@@ -445,6 +445,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
