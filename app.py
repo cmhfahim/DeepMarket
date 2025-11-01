@@ -383,13 +383,6 @@ elif page == "📝 Feedback":
 
 
 
-'''st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
-
-# Center the 5th member using 3-column layout
-col_left, col_center, col_right = st.columns([1, 2, 1])
-with col_center:
-st.markdown(member_card("Pijush Das", "pijushdas123@gmail.com"), unsafe_allow_html=True)'''
-
 
 
 
