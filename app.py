@@ -118,10 +118,10 @@ if page == "🏠 Home":
         st.markdown(member_card("Shafi Sharar", "shafi211@gmail.com"), unsafe_allow_html=True)
 
     # Spacer before the last member
-    st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
+    '''st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
 
     # Center the 5th member using 3-column layout
-    '''col_left, col_center, col_right = st.columns([1, 2, 1])
+    col_left, col_center, col_right = st.columns([1, 2, 1])
     with col_center:
         st.markdown(member_card("Pijush Das", "pijushdas123@gmail.com"), unsafe_allow_html=True)'''
 
@@ -386,6 +386,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
