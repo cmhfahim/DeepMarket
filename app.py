@@ -193,7 +193,7 @@ elif page == "📈 Market Analysis":
         x='DATE',
         y='VOLUME',
         title="Total Trading Volume Across All Companies",
-        color_discrete_sequence=['#6A5ACD']
+        color_discrete_sequence=['#8892BF']
     )
     st.plotly_chart(fig_market_vol, use_container_width=True)
 
@@ -559,6 +559,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
