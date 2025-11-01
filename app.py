@@ -161,13 +161,18 @@ elif page == "📊 Visualization":
     # ---- Returns & Distribution ----
     st.subheader("📊 Daily % Change Histogram")
     company_df['PCT_CHANGE'] = company_df['CLOSEP*'].pct_change() * 100
-    fig_hist = px.histogram(company_df, x='PCT_CHANGE', nbins=30,
-                            title=f"{selected_company} – Daily % Change",
-                            color='PCT_CHANGE',
-                            color_continuous_scale=px.colors.sequential.Viridis)
+    fig_hist = px.histogram(
+        company_df,
+        x='PCT_CHANGE',
+        nbins=30,
+        title=f"{selected_company} – Daily % Change"
+    )
+    fig_hist.update_traces(marker_color=px.colors.sequential.Viridis[-1])
     fig_hist.update_xaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
     fig_hist.update_yaxes(showgrid=True, gridwidth=0.5, gridcolor='gray')
+    fig_hist.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig_hist, use_container_width=True)
+
 
     st.subheader("📦 Close Price Distribution (Box Plot)")
     fig_box = px.box(company_df, x='CLOSEP*', points="all",
@@ -353,6 +358,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
