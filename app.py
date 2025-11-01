@@ -63,7 +63,7 @@ with open("company_encoding.json", "r") as f:
 
 
 # Sidebar
-st.sidebar.title("📂 Navigation")
+st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home","Market Analysis", "Visualization", "Prediction","Feedback"])
 
 # ---- Pages ----
@@ -556,6 +556,7 @@ elif page == "Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
