@@ -64,11 +64,11 @@ with open("company_encoding.json", "r") as f:
 
 # Sidebar
 st.sidebar.title("📂 Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home","📈 Market Analysis", "📊 Visualization", "📌 Prediction","📝 Feedback"])
+page = st.sidebar.radio("Go to", ["Home","Market Analysis", "Visualization", "Prediction","Feedback"])
 
 # ---- Pages ----
 
-if page == "🏠 Home":
+if page == "Home":
     st.markdown("""
         <div style="text-align: center;">
             <h1 style='color:black; font-size: 70px;'>DeepMarket</h1>
@@ -128,7 +128,7 @@ if page == "🏠 Home":
     # Footer
     st.markdown("<p style='text-align:center; margin-top:50px; color:black;'>💡 Built by <strong>Team QuantumTalk</strong></p>", unsafe_allow_html=True)
 
-elif page == "📈 Market Analysis":
+elif page == "Market Analysis":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>Market Analysis</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     
@@ -235,7 +235,7 @@ elif page == "📈 Market Analysis":
 
 
 
-elif page == "📊 Visualization":
+elif page == "Visualization":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>Data Visualization</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -428,7 +428,7 @@ elif page == "📊 Visualization":
 
 
 
-elif page == "📌 Prediction":
+elif page == "Prediction":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>🔮 Prediction</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -528,7 +528,7 @@ elif page == "📌 Prediction":
     """, unsafe_allow_html=True)
 
 
-elif page == "📝 Feedback":
+elif page == "Feedback":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📝 Feedback</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -556,6 +556,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
