@@ -58,7 +58,6 @@ def load_vis_data2():
     return df
     
 df_vis2 = load_vis_data2()
-# Load encoding and model
 with open("company_encoding.json", "r") as f:
     enc_dict = json.load(f)
 
@@ -130,7 +129,7 @@ if page == "🏠 Home":
     st.markdown("<p style='text-align:center; margin-top:50px; color:black;'>💡 Built by <strong>Team QuantumTalk</strong></p>", unsafe_allow_html=True)
 
 elif page == "📈 Market Analysis":
-    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>📈 Market Analysis</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>Market Analysis</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     
     # ---- Monthly Average Trend (Donut Chart) ----
@@ -164,7 +163,6 @@ elif page == "📈 Market Analysis":
     st.subheader("Market Target Distribution (Up/No Change/Down)")
     target_counts = df_vis2['TARGET'].value_counts().reindex([1, 0, -1], fill_value=0)
     
-    # Use simplified labels and consistent color style
     target_labels = ["Up", "No Change", "Down"]
     
     fig_market_target = px.pie(
@@ -225,12 +223,12 @@ elif page == "📈 Market Analysis":
     )
     fig_polar.update_layout(
         polar=dict(
-            bgcolor='rgba(0,0,0,0)',  # transparent polar background
+            bgcolor='rgba(0,0,0,0)',  
             radialaxis=dict(showticklabels=False, ticks='', gridcolor='rgba(0,0,0,0)'),
             angularaxis=dict(direction="clockwise", gridcolor='rgba(0,0,0,0)')
         ),
-        paper_bgcolor='rgba(0,0,0,0)',   # transparent paper
-        plot_bgcolor='rgba(0,0,0,0)',    # transparent plot
+        paper_bgcolor='rgba(0,0,0,0)',  
+        plot_bgcolor='rgba(0,0,0,0)',    
         font_color="white"
     )
     st.plotly_chart(fig_polar, use_container_width=True)
@@ -559,6 +557,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
