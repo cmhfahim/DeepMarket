@@ -12,7 +12,7 @@ import base64
 
 st.set_page_config(page_title="📈 DeepMarket", layout="wide")
 
-# ---- Custom Sidebar Font Size ----
+# ---- Custom Sidebar Font Size -----
 st.markdown("""
     <style>
         .sidebar .sidebar-content {
@@ -386,6 +386,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
