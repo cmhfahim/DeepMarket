@@ -213,25 +213,50 @@ elif page == "📊 Visualization":
     )
     st.plotly_chart(fig_polar, use_container_width=True)
 
+    # Define the consistent color mapping and label order
+    target_color_map = {
+        1: "#2ecc71",   # Up (Green)
+        0: "#f1c40f",   # No Change (Yellow)
+        -1: "#e74c3c"   # Down (Red)
+    }
+    target_labels = ["1 = Price Up", "0 = No Change", "-1 = Price Down"]
+    
+    # ---- Monthly Target Histogram ----
     st.subheader("📅 Monthly Target Histogram")
     fig4 = px.histogram(
         company_df,
         x="MONTH",
         color="TARGET",
         category_orders={"MONTH": list(range(1, 13))},
-        color_discrete_map={1: "#2ecc71", 0: "#f1c40f", -1: "#e74c3c"},
+        color_discrete_map=target_color_map,
         title="Target by Month",
         width=900,
         height=400
     )
-    fig4.update_layout(bargap=0.15, bargroupgap=0.05)
+    fig4.update_layout(
+        bargap=0.15,
+        bargroupgap=0.05,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
     st.plotly_chart(fig4, use_container_width=True)
-
+    
+    # ---- Target Distribution (Pie Chart) ----
     st.subheader("🥧 Target Distribution")
     pie_data = company_df["TARGET"].value_counts().reindex([1, 0, -1], fill_value=0)
-    pie_labels = ["1 = Up", "0 = No Change", "-1 = Down"]
-    fig3 = px.pie(values=pie_data.values, names=pie_labels, color_discrete_sequence=["#2ecc71", "#f1c40f", "#e74c3c"])
+    fig3 = px.pie(
+        values=pie_data.values,
+        names=target_labels,
+        color=pie_data.index.astype(str),
+        color_discrete_map={str(k): v for k, v in target_color_map.items()},
+        title="Target Distribution"
+    )
+    fig3.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
     st.plotly_chart(fig3, use_container_width=True)
+
 
     # ---- Relationships & Correlations ----
     st.subheader("🔀 Volume vs Close Price Scatter")
@@ -382,6 +407,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
