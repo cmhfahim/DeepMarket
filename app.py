@@ -187,15 +187,15 @@ elif page == "📈 Market Analysis":
     st.plotly_chart(fig_pie, use_container_width=True)
 
     # ---- Market Target Distribution ----st.subheader("Market Target Distribution (Up/No Change/Down)")
+    st.subheader("Market Target Distribution (Up/No Change/Down)")
     target_counts = df_vis2['TARGET'].value_counts().reindex([1, 0, -1], fill_value=0)
     
-    # Mapping consistent with the "Monthly Average Direction" chart
+    # Use simplified labels and consistent color style
     target_labels = ["Up", "No Change", "Down"]
     
     fig_market_target = px.pie(
         values=target_counts.values,
         names=target_labels,
-        hole=0.5,  # donut chart
         title="Overall Market Target Distribution",
         color=target_labels,
         color_discrete_map={"Up": "green", "Down": "red", "No Change": "gray"}
@@ -208,7 +208,8 @@ elif page == "📈 Market Analysis":
     )
     
     st.plotly_chart(fig_market_target, use_container_width=True)
-
+    
+    
 
     # ---- Total Market Volume Over Time ----
     st.subheader("Total Market Volume Over Time")
@@ -545,6 +546,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
