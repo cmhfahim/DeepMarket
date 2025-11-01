@@ -43,7 +43,7 @@ st.markdown("""
 # ---- Load data ----
 @st.cache_data
 def load_vis_data():
-    df = pd.read_csv("cleaned_sorted_dse_data_3.csv", parse_dates=["DATE"])
+    df = pd.read_csv("display_data_set.csv", parse_dates=["DATE"])
     df["MONTH"] = df["DATE"].dt.month
     df["YEAR_MONTH"] = df["DATE"].dt.to_period("M").astype(str)
     return df
@@ -407,6 +407,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
