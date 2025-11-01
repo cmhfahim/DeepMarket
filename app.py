@@ -51,12 +51,13 @@ def load_vis_data():
 df_vis = load_vis_data()
 
 @st.cache_data
-def load_vis_data():
-    df = pd.read_csv("display_data_set.csv", parse_dates=["DATE"])
+def load_vis_data2():
+    df = pd.read_csv("Final_data_for_ML.csv", parse_dates=["DATE"])
     df["MONTH"] = df["DATE"].dt.month
     df["YEAR_MONTH"] = df["DATE"].dt.to_period("M").astype(str)
     return df
-
+    
+df_vis2 = load_vis_data2()
 # Load encoding and model
 with open("company_encoding.json", "r") as f:
     enc_dict = json.load(f)
@@ -134,11 +135,13 @@ elif page == "📊 Visualization":
     st.markdown("<br>", unsafe_allow_html=True)
 
     selected_company = st.selectbox("Select a company", sorted(df_vis["TRADING CODE"].unique()))
-    company_df = df_vis[df_vis["TRADING CODE"] == selected_company].copy()
+    company_df2 = df_vis[df_vis["TRADING CODE"] == selected_company].copy()
 
     st.subheader("📄 Raw Data")
-    st.dataframe(company_df, use_container_width=True)
+    st.dataframe(company_df2, use_container_width=True)
     st.markdown("---")
+
+    company_df = df_vis2[df_vis2["TRADING CODE"] == selected_company].copy()
 
     # ---- Trend & Rolling ----
     st.subheader("📈 Close Price Over Time")
@@ -436,6 +439,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
