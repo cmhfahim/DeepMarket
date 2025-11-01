@@ -224,6 +224,43 @@ elif page == "📈 Market Analysis":
     st.plotly_chart(fig_market_vol, use_container_width=True)
 
 
+    
+    st.subheader("Monthly Market Behavior (Circular Axis View)")
+    monthly_trend = (
+        df_vis2.groupby(df_vis2['DATE'].dt.to_period('M'))['TARGET']
+        .mean()
+        .reset_index()
+    )
+    monthly_trend['MONTH'] = monthly_trend['DATE'].dt.strftime('%b')
+
+    # Assign numeric values for plotting (Up=1, No Change=0, Down=-1)
+    monthly_trend['Trend_Value'] = monthly_trend['TARGET'].apply(
+        lambda x: 1 if x > 0.05 else (-1 if x < -0.05 else 0)
+    )
+    monthly_trend['Trend_Label'] = monthly_trend['Trend_Value'].map(
+        {1: 'Up', 0: 'No Change', -1: 'Down'}
+    )
+
+    fig_polar = px.bar_polar(
+        monthly_trend,
+        r='Trend_Value',
+        theta='MONTH',
+        color='Trend_Label',
+        color_discrete_map={"Up": "green", "Down": "red", "No Change": "gray"},
+        title="Average Market Trend by Month (Circular Axis)"
+    )
+    fig_polar.update_layout(
+        polar=dict(
+            radialaxis=dict(showticklabels=False, ticks=''),
+            angularaxis=dict(direction="clockwise")
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
+    st.plotly_chart(fig_polar, use_container_width=True)
+
+
+
 
 elif page == "📊 Visualization":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>Data Visualization</h2>", unsafe_allow_html=True)
@@ -546,6 +583,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
