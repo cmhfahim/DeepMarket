@@ -50,11 +50,17 @@ def load_vis_data():
 
 df_vis = load_vis_data()
 
+@st.cache_data
+def load_vis_data():
+    df = pd.read_csv("display_data_set.csv", parse_dates=["DATE"])
+    df["MONTH"] = df["DATE"].dt.month
+    df["YEAR_MONTH"] = df["DATE"].dt.to_period("M").astype(str)
+    return df
+
 # Load encoding and model
 with open("company_encoding.json", "r") as f:
     enc_dict = json.load(f)
 
-model = joblib.load("lgbm_model.pkl")
 
 # Sidebar
 st.sidebar.title("📂 Navigation")
@@ -430,6 +436,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
