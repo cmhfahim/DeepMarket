@@ -83,7 +83,7 @@ if page == "Home":
         <div style='height:40px;'></div>
 
         <div style="text-align: center; max-width: 900px; margin: 0 auto; color:#241717; font-size: 18px; line-height: 1.6;">
-            <h2>🌐 Description</h2>
+            <h2>Description</h2>
             <p>
                 Explore trends, visualize insights, and predict future movement of stocks from Dhaka Stock Exchange using interactive tools. This platform leverages historical data to understand stock behavior and uses machine learning models (LightGBM,XGBoost,Neural Network) to forecast whether a company's stock is likely to go up, stay unchanged, or go down. With rich visualizations, stock-wise filtering, and an interactive prediction interface, users can gain deeper insights into the market's rhythm. Whether you're a curious learner, a data enthusiast, or a researcher, DeepMarket offers a compact yet powerful window into financial analytics. Built using <strong>Python, Streamlit, Plotly, LightGBM,XGBoost,Neural Network, Pandas,</strong> and <strong>Seaborn</strong>, this project aims to bridge the gap between data science and financial decision-making.
             </p>
@@ -93,7 +93,7 @@ if page == "Home":
     """, unsafe_allow_html=True)
 
     # Team section title
-    st.markdown("<h2 style='text-align:center;'>👥 Team Members</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>Team Members</h2>", unsafe_allow_html=True)
     st.markdown("<div style='height:30px;'></div>", unsafe_allow_html=True)
 
     # Member card HTML template
@@ -126,7 +126,7 @@ if page == "Home":
     # Spacer before the last member
 
     # Footer
-    st.markdown("<p style='text-align:center; margin-top:50px; color:black;'>💡 Built by <strong>Team QuantumTalk</strong></p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; margin-top:50px; color:black;'>Built by <strong>Team QuantumTalk</strong></p>", unsafe_allow_html=True)
 
 elif page == "Market Analysis":
     st.markdown("<h2 style='text-align:center; font-size:36px; color:white;'>Market Analysis</h2>", unsafe_allow_html=True)
@@ -556,6 +556,7 @@ elif page == "Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
