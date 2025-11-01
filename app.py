@@ -343,8 +343,14 @@ elif page == "📌 Prediction":
     model_path = model_files[model_choice]
 
     try:
-        with open(model_path, "rb") as f:
-            model = pickle.load(f)
+        if model_choice == "LightGBM":
+            model = joblib.load("lgbm_model.pkl")  # joblib for LightGBM
+        elif model_choice == "Random Forest":
+            model = joblib.load("rf_model.pkl")   # joblib for RF
+        elif model_choice == "XGBoost":
+            import pickle
+            with open("xgboost_model.pkl", "rb") as f:
+                model = pickle.load(f)  # XGBoost works with pickle
     except Exception as e:
         st.error(f"❌ Failed to load {model_choice} model: {e}")
         st.stop()
@@ -439,6 +445,7 @@ elif page == "📝 Feedback":
             📩 Your feedback helps us improve this platform!
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
